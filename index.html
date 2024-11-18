@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureScope - Advanced Recon Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #111827;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(8px);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #22d3ee;
+            text-decoration: none;
+        }
+
+        .tools-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8rem 2rem 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .tool-card {
+            background-color: #1f2937;
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(34, 211, 238, 0.1);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(34, 211, 238, 0.2);
+            border-color: rgba(34, 211, 238, 0.2);
+        }
+
+        .tool-header {
+            position: relative;
+            padding-top: 56.25%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .tool-header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(31, 41, 55, 0) 0%, rgba(31, 41, 55, 1) 100%);
+        }
+
+        .partner-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            color: #22d3ee;
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+
+        .partner-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background-color: #22d3ee;
+            border-radius: 50%;
+        }
+
+        .tool-content {
+            padding: 1.5rem;
+        }
+
+        .tool-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .tool-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: rgba(34, 211, 238, 0.1);
+            border-radius: 0.75rem;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tool-description {
+            color: #9ca3af;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .tool-features {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(34, 211, 238, 0.1);
+        }
+
+        .tool-features.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            color: #d1d5db;
+            font-size: 0.875rem;
+            background: rgba(34, 211, 238, 0.05);
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+        }
+
+        .feature-list li::before {
+            content: '•';
+            color: #22d3ee;
+            margin-right: 0.5rem;
+        }
+
+        .purchase-btn {
+            display: inline-block;
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #22d3ee, #0891b2);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .purchase-btn::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, #22d3ee, #0891b2);
+            filter: blur(12px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .purchase-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .purchase-btn:hover::before {
+            opacity: 0.7;
+        }
+
+        .price {
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #22d3ee;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: #9ca3af;
+            font-weight: normal;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+                padding: 6rem 1rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">SecureScope</a>
+        </div>
+    </nav>
+
+    <div class="tools-grid">
+        <div class="tool-card">
+            <div class="tool-header" style="background-image: url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80')">
+                <div class="partner-badge">Partnered with Task</div>
+            </div>
+            <div class="tool-content">
+                <h3 class="tool-title">
+                    <div class="tool-icon">
+                        <svg width="24" height="24" fill="none" stroke="#22d3ee" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                        </svg>
+                    </div>
+                    ReconMaster Elite
+                </h3>
+                <p class="tool-description">Advanced reconnaissance suite with comprehensive scanning capabilities and stealth features.</p>
+                <div class="tool-features">
+                    <ul class="feature-list">
+                        <li>DNS Enumeration</li>
+                        <li>Port Scanning</li>
+                        <li>Service Detection</li>
+                        <li>OSINT Integration</li>
+                        <li>Subdomain Discovery</li>
+                        <li>SSL Analysis</li>
+                        <li>WAF Detection</li>
+                        <li>Asset Discovery</li>
+                        <li>Network Mapping</li>
+                        <li>Vulnerability Scanning</li>
+                        <li>API Endpoint Detection</li>
+                        <li>Cloud Resource Discovery</li>
+                    </ul>
+                    <div class="price">
+                        $10 <span>/lifetime</span>
+                    </div>
+                    <a href="https://discord.gg/6vfa4qdaaz" target="_blank" class="purchase-btn">Purchase on Discord</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.tool-content').addEventListener('click', function(e) {
+            const features = this.querySelector('.tool-features');
+            if (!features.contains(e.target)) {
+                features.classList.toggle('active');
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.tool-card')) {
+                document.querySelectorAll('.tool-features').forEach(feature => {
+                    feature.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
